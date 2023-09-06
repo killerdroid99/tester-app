@@ -23,9 +23,10 @@
 <script setup lang="ts">
 const email = ref("")
 const disableBtn = ref(false)
+const config = useRuntimeConfig()
 
 const { mutateAsync, data: mutationData } = useMutation({
-  mutationFn: (email: string): Promise<any> => $fetch("http://localhost:8080/auth/forgot-password", { method: "POST", body: { email } }),
+  mutationFn: (email: string): Promise<any> => $fetch(`${config.public.SERVER_URL}/auth/forgot-password`, { method: "POST", body: { email } }),
 })
 
 async function handleSubmit() {

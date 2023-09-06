@@ -44,6 +44,7 @@ const profilePic = ref<HTMLDivElement>()
 const img = ref<string>()
 const imgFile = ref<File>()
 const queryClient = useQueryClient()
+const config = useRuntimeConfig()
 
 const { open, onChange } = useFileDialog()
 
@@ -68,11 +69,11 @@ function deselect() {
 
 const { data } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/auth/current`, { credentials: "include" })
 })
 
 const { mutateAsync, data: mutationData } = useMutation({
-  mutationFn: (data: FormData) => $fetch("http://localhost:8080/auth/profile/picture", { method: "PUT", body: data, credentials: "include" }),
+  mutationFn: (data: FormData) => $fetch(`${config.public.SERVER_URL}/auth/profile/picture`, { method: "PUT", body: data, credentials: "include" }),
 })
 
 async function imageUpload() {

@@ -77,12 +77,13 @@ const text = ref("")
 const ta = ref<HTMLTextAreaElement>()
 
 const { focused } = useFocus(ta, { initialValue: true })
+const config = useRuntimeConfig()
 
 onMounted(() => text.value = comment.text)
 onClickOutside(target, (event) => (commentDeleteMode.value = false))
 
 const { mutateAsync: editAsync } = useMutation({
-  mutationFn: (commentData: { text: string }) => $fetch(`http://localhost:8080/api/post/comment/${comment.id}`, { method: "PATCH", credentials: "include", body: commentData }),
+  mutationFn: (commentData: { text: string }) => $fetch(`${config.public.SERVER_URL}/api/post/comment/${comment.id}`, { method: "PATCH", credentials: "include", body: commentData }),
   onSuccess: () => {
     // Invalidate and refetch
     queryClient.invalidateQueries({ queryKey: ['comment', postId] })
@@ -91,7 +92,7 @@ const { mutateAsync: editAsync } = useMutation({
 })
 
 const { mutateAsync: deleteAsync } = useMutation({
-  mutationFn: () => $fetch(`http://localhost:8080/api/post/comment/${comment.id}`, { method: "DELETE", credentials: "include" }),
+  mutationFn: () => $fetch(`${config.public.SERVER_URL}/api/post/comment/${comment.id}`, { method: "DELETE", credentials: "include" }),
   onSuccess: () => {
     // Invalidate and refetch
     queryClient.invalidateQueries({ queryKey: ['comment', postId] })

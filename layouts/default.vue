@@ -46,17 +46,19 @@ export type ICurrentUser = {
 }
 
 const queryClient = useQueryClient()
+const config = useRuntimeConfig()
+
 
 const { data } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/auth/current`, { credentials: "include" })
 })
 
 const el = ref<HTMLElement>()
 
 
 const { mutateAsync, isLoading: isLogoutLoading } = useMutation({
-  mutationFn: () => $fetch("http://localhost:8080/auth/logout", { method: "POST", credentials: "include" }),
+  mutationFn: () => $fetch(`${config.public.SERVER_URL}/auth/logout`, { method: "POST", credentials: "include" }),
 })
 
 async function handleLogout() {

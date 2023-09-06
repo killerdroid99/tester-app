@@ -36,9 +36,11 @@ type post = {
   }
 }
 
+const config = useRuntimeConfig()
+
 const { isLoading, data } = useQuery<post[]>({
   queryKey: ['posts'],
-  queryFn: () => $fetch("http://localhost:8080/api/posts", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/posts`, { credentials: "include" })
 })
 
 </script>

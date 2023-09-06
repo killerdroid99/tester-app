@@ -35,11 +35,12 @@ useHead({
 
 const title = ref("")
 const content = ref("")
+const config = useRuntimeConfig()
 
 const queryClient = useQueryClient()
 
 const { mutateAsync } = useMutation({
-  mutationFn: (postData: IPost) => $fetch("http://localhost:8080/api/posts", { method: "POST", body: postData, credentials: "include" }),
+  mutationFn: (postData: IPost) => $fetch(`${config.public.SERVER_URL}/api/posts`, { method: "POST", body: postData, credentials: "include" }),
   onSuccess: () => {
     // Invalidate and refetch
     navigateTo("/")

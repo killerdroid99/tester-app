@@ -56,6 +56,7 @@ const password = ref("")
 
 const showPassword = ref(false)
 const queryClient = useQueryClient()
+const config = useRuntimeConfig()
 
 function toggleShowPassword() {
   showPassword.value = !showPassword.value
@@ -66,7 +67,7 @@ useHead({
 })
 
 const { mutateAsync, data: mutationData } = useMutation({
-  mutationFn: (userData: IUser): Promise<IMutationData> => $fetch("http://localhost:8080/auth/login", { method: "POST", body: userData, credentials: "include" }),
+  mutationFn: (userData: IUser): Promise<IMutationData> => $fetch(`${config.public.SERVER_URL}/auth/login`, { method: "POST", body: userData, credentials: "include" }),
 })
 
 async function handleSubmit() {
@@ -80,7 +81,7 @@ async function handleSubmit() {
 
 const { data } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/auth/current`, { credentials: "include" })
 })
 
 

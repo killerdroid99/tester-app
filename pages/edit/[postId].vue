@@ -36,10 +36,11 @@ type IPost = {
 }
 
 const route = useRoute()
+const config = useRuntimeConfig()
 
 const { isLoading: isPostLoading, data: postData } = useQuery<IPostData>({
   queryKey: ['postById', route.params.postId],
-  queryFn: () => $fetch(`http://localhost:8080/api/post/${route.params.postId}`, { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/post/${route.params.postId}`, { credentials: "include" })
 })
 
 if (!isPostLoading) {
@@ -53,13 +54,13 @@ const content = ref(postData.value?.content)
 
 const { isLoading, isError, data, error } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/auth/current`, { credentials: "include" })
 })
 
 const queryClient = useQueryClient()
 
 const { mutateAsync } = useMutation({
-  mutationFn: (postData: IPost) => $fetch(`http://localhost:8080/api/post/${route.params.postId}`, { method: "PATCH", body: postData, credentials: "include" }),
+  mutationFn: (postData: IPost) => $fetch(`${config.public.SERVER_URL}/api/post/${route.params.postId}`, { method: "PATCH", body: postData, credentials: "include" }),
   onSuccess: () => {
     // Invalidate and refetch
     navigateTo("/")

@@ -107,15 +107,16 @@ const email = ref("")
 const password = ref("")
 const confirmPassword = ref("")
 const loginDirectly = ref(true)
+const config = useRuntimeConfig()
 
 const { data } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/auth/current`, { credentials: "include" })
 })
 
 
 const { mutateAsync, data: mutationData } = useMutation({
-  mutationFn: (newUserData: INewUser): Promise<IMutationData> => $fetch("http://localhost:8080/auth/signup", { method: "POST", body: newUserData, credentials: "include" }),
+  mutationFn: (newUserData: INewUser): Promise<IMutationData> => $fetch(`${config.public.SERVER_URL}/auth/signup`, { method: "POST", body: newUserData, credentials: "include" }),
 })
 
 

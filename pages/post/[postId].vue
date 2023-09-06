@@ -95,20 +95,22 @@ export type IPostData = {
 
 const route = useRoute()
 const queryClient = useQueryClient()
+const config = useRuntimeConfig()
+
 
 const { isLoading, data } = useQuery<IPostData>({
   queryKey: ['postById', route.params.postId],
-  queryFn: () => $fetch(`http://localhost:8080/api/post/${route.params.postId}`, { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/post/${route.params.postId}`, { credentials: "include" })
 })
 
 const { data: votesData } = useQuery<{ totalVotes: string }>({
   queryKey: ['votes', route.params.postId],
-  queryFn: () => $fetch(`http://localhost:8080/api/post/votes/${route.params.postId}`, { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/post/votes/${route.params.postId}`, { credentials: "include" })
 })
 
 const { data: commentData } = useQuery<IComment[]>({
   queryKey: ['comment', route.params.postId],
-  queryFn: () => $fetch(`http://localhost:8080/api/post/comments/${route.params.postId}`, { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/post/comments/${route.params.postId}`, { credentials: "include" })
 })
 
 useHead({
@@ -117,11 +119,11 @@ useHead({
 
 const { data: userData } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/auth/current`, { credentials: "include" })
 })
 
 const { mutateAsync } = useMutation({
-  mutationFn: () => $fetch(`http://localhost:8080/api/post/${route.params.postId}`, { method: "DELETE", credentials: "include" }),
+  mutationFn: () => $fetch(`${config.public.SERVER_URL}/api/post/${route.params.postId}`, { method: "DELETE", credentials: "include" }),
   onSuccess: () => {
     // Invalidate and refetch
     navigateTo("/")
@@ -130,7 +132,7 @@ const { mutateAsync } = useMutation({
 })
 
 const { mutateAsync: votePostAsync } = useMutation({
-  mutationFn: () => $fetch(`http://localhost:8080/api/post/vote/${route.params.postId}`, { method: "PUT", credentials: "include" }),
+  mutationFn: () => $fetch(`${config.public.SERVER_URL}/api/post/vote/${route.params.postId}`, { method: "PUT", credentials: "include" }),
   onSuccess: () => {
     // Invalidate and refetch
     queryClient.invalidateQueries({ queryKey: ['votes', route.params.postId] })
@@ -139,7 +141,7 @@ const { mutateAsync: votePostAsync } = useMutation({
 
 const { data: voteStatus } = useQuery<{ voted: boolean }>({
   queryKey: ['voteStatus', route.params.postId],
-  queryFn: () => $fetch(`http://localhost:8080/api/post/vote/${route.params.postId}`, { method: "GET", credentials: "include" }),
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/post/vote/${route.params.postId}`, { method: "GET", credentials: "include" }),
 })
 
 const dialog = ref<HTMLDialogElement>()

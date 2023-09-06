@@ -49,6 +49,8 @@ const emits = defineEmits(['close'])
 const queryClient = useQueryClient()
 const text = ref("")
 const target = ref<HTMLDivElement>()
+const config = useRuntimeConfig()
+
 
 onClickOutside(target, (event) => emits("close"))
 
@@ -59,11 +61,11 @@ onKeyStroke("Escape", (e) => {
 
 const { data, isLoading } = useQuery<IComment[]>({
   queryKey: ['comment', props.postId],
-  queryFn: () => $fetch(`http://localhost:8080/api/post/comments/${props.postId}`, { credentials: "include" })
+  queryFn: () => $fetch(`${config.public.SERVER_URL}/api/post/comments/${props.postId}`, { credentials: "include" })
 })
 
 const { mutateAsync } = useMutation({
-  mutationFn: (commentData: { text: string }) => $fetch(`http://localhost:8080/api/post/comment/${props.postId}`, { method: "POST", credentials: "include", body: commentData }),
+  mutationFn: (commentData: { text: string }) => $fetch(`${config.public.SERVER_URL}/api/post/comment/${props.postId}`, { method: "POST", credentials: "include", body: commentData }),
   onSuccess: () => {
     // Invalidate and refetch
     queryClient.invalidateQueries({ queryKey: ['comment', props.postId] })
@@ -72,7 +74,7 @@ const { mutateAsync } = useMutation({
 
 const { data: userData } = useQuery<ICurrentUser>({
   queryKey: ['currentUser'],
-  queryFn: () => $fetch("http://localhost:8080/auth/current", { credentials: "include" })
+  queryFn: () => $fetch("${config.public.SERVER_URL}/auth/current", { credentials: "include" })
 })
 
 async function addComment() {
