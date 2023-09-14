@@ -6,7 +6,7 @@
       :key="post.id">
       <h2 class="text-2xl font-semibold flex items-center gap-2">
         <p v-if="post.title.length > 50">
-          {{ post.title.slice(0, 22) }}...
+          {{ post.title.slice(0, 20) }}...
         </p>
         <p v-else>
           {{ post.title }}
