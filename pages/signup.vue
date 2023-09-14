@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="grid grid-cols-2 gap-6 bg-slate-900 p-10 max-w-4xl mx-auto mt-2 rounded" @submit.prevent="handleSubmit">
+    <form class="grid grid-cols-2 gap-3 bg-slate-900 p-10 max-w-4xl mx-auto mt-2 rounded" @submit.prevent="handleSubmit">
       <h2 class="col-span-2 text-4xl text-center font-semibold pb-5 underline decoration-emerald-500 underline-offset-4">
         Signup form</h2>
       <div class="flex flex-col-reverse gap-1 relative">
@@ -53,7 +53,7 @@
       </div>
       <div class="flex gap-2 select-none">
         <input type="checkbox" id="loginDirectly" class="hidden" v-model="loginDirectly" />
-        <label for="loginDirectly" class="flex gap-2 select-none">
+        <label for="loginDirectly" class="flex gap-2 cursor-pointer">
           <div :class="loginDirectly ? 'bg-emerald-700 ring-black/20' : 'bg-slate-400/30 ring-slate-900/5'"
             class="ml-auto pointer-events-auto h-6 w-10 rounded-full p-1 ring-1 ring-inset transition duration-200 ease-in-out">
             <div :class="loginDirectly && 'translate-x-4'"

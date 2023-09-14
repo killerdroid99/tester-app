@@ -1,5 +1,5 @@
 <template>
-  <form class="grid gap-8 bg-slate-900 p-10 max-w-2xl mx-auto mt-6 rounded" @submit.prevent="handleSubmit">
+  <form class="grid gap-3 bg-slate-900 p-10 max-w-2xl mx-auto mt-6 rounded" @submit.prevent="handleSubmit">
     <div class="flex flex-col-reverse gap-1 relative">
       <small class="text-red-500 absolute -bottom-5 right-0" v-if="mutationData?.fields?.includes('email')">
         {{ mutationData?.msg }}
@@ -9,11 +9,7 @@
       <label for="email" class="peer-focus-visible:text-emerald-400 text-xl">Email</label>
     </div>
     <div class="flex flex-col-reverse gap-1 relative">
-      <span class="absolute -bottom-7 right-0">
-        <NuxtLink to="/forgot-password" class="text-indigo-400 hover:underline underline-offset-2">
-          Forgot password?
-        </NuxtLink>
-      </span>
+
       <small class="text-red-500 absolute -bottom-5 right-0" v-if="mutationData?.fields?.includes('password')">
         {{ mutationData?.msg }}
       </small>
@@ -39,6 +35,9 @@
       class="text-xl outline-none border-none bg-sky-600 p-2 rounded transition-all ease-in hover:bg-sky-700 font-medium active:scale-95 focus-visible:ring-2 focus-visible:ring-sky-600 ring-offset-2 ring-offset-slate-900 mt-2">
       Submit
     </button>
+    <NuxtLink to="/forgot-password" class="text-indigo-400 hover:underline underline-offset-2 text-center">
+      Forgot password?
+    </NuxtLink>
   </form>
 </template>
 

@@ -1,12 +1,12 @@
 <template>
   <div v-if="isLoading" class="animate-pulse">Loading posts...</div>
   <div class="grid gap-8" v-if="!isLoading">
-    <NuxtLink :to="'/post/' + post.id"
+    <NuxtLink :to="'/post/' + post.id" :title="post.title"
       class="bg-slate-800 p-4 transition-all ease-out hover:bg-slate-900 hover:rounded-md grid gap-2" v-for="post in data"
       :key="post.id">
       <h2 class="text-2xl font-semibold flex items-center gap-2">
         <p v-if="post.title.length > 50">
-          {{ post.title.slice(0, 50) }}...
+          {{ post.title.slice(0, 22) }}...
         </p>
         <p v-else>
           {{ post.title }}
