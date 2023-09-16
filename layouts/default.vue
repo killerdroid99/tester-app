@@ -7,19 +7,11 @@
     </NuxtLink>
 
     <!-- menu btn -->
-    <div class="absolute right-4 top-4 cursor-pointer hover:bg-slate-700/60 rounded-full md:hidden block"
-      @click="() => isSidebar = true" v-if="!isSidebar">
+    <div class="absolute right-4 top-4 cursor-pointer hover:bg-slate-700/60 rounded-full md:hidden block z-50"
+      @click="() => isSidebar = true">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256">
         <path fill="currentColor"
           d="M224 128a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h176a8 8 0 0 1 8 8ZM40 72h176a8 8 0 0 0 0-16H40a8 8 0 0 0 0 16Zm176 112H40a8 8 0 0 0 0 16h176a8 8 0 0 0 0-16Z" />
-      </svg>
-    </div>
-    <!-- x btn -->
-    <div class="absolute right-4 top-4 cursor-pointer hover:bg-slate-700/60 rounded-full md:hidden block"
-      @click="() => isSidebar = false" v-else>
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256">
-        <path fill="currentColor"
-          d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z" />
       </svg>
     </div>
 
@@ -32,10 +24,10 @@
       <CustomLink to="/profile" title="view profile" class="font-bold text-2xl inline-flex items-center gap-3"
         v-if="data?.name">
         <div v-if="data?.profileImage" class="">
-          <img :src="data.profileImage" class="w-8 h-8 rounded-full" />
+          <img :src="data.profileImage" class="w-8 h-8 rounded-full" alt="" />
         </div>
         <div v-else class="">
-          <img src="/dummy.jpeg" class="w-8 h-8 rounded-full" />
+          <img src="/dummy.jpeg" class="w-8 h-8 rounded-full" alt="dummy" />
         </div>
         {{ data?.name }}
       </CustomLink>
@@ -48,10 +40,23 @@
   </header>
 
   <!-- sidebar for mobiles -->
+  <Transition name="modal" tag="div">
+    <div v-if="isSidebar" class="absolute inset-0 z-10 bg-zinc-950/90" />
+  </Transition>
+
   <Transition name="sidebar" tag="div">
     <div v-if="isSidebar"
-      class="fixed h-screen bg-slate-900/80 backdrop-blur-xl z-20 inset-0 w-2/3 flex flex-col justify-between"
+      class="fixed h-screen pt-4 bg-slate-900/80 backdrop-blur-xl z-10 right-0 top-0 w-2/3 flex flex-col justify-between md:hidden"
       ref="sidebar">
+
+      <div class="absolute right-4 top-4 cursor-pointer hover:bg-slate-700/60 rounded-full md:hidden block z-50"
+        @click="() => isSidebar = false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256">
+          <path fill="currentColor"
+            d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z" />
+        </svg>
+      </div>
+
       <div class="flex flex-col text-lg gap-2 p-8">
         <CustomLink @click="() => isSidebar = false" class="p-4 hover:bg-gray-600/30 rounded flex items-center gap-4"
           to="/">
@@ -99,7 +104,7 @@
         <CustomLink @click="() => isSidebar = false" to="/profile" title="view profile"
           class="font-bold inline-flex items-center gap-2">
           <div v-if="data?.profileImage">
-            <img :src="data.profileImage" class="w-12 h-12 rounded-full" />
+            <img :src="data.profileImage" class="w-12 h-12 rounded-full" alt="" />
           </div>
           <div v-else>
             <img src="/dummy.jpeg" class="w-8 h-8 rounded-full" />
@@ -111,7 +116,7 @@
         </CustomLink>
         <button v-if="data?.name" @click="handleLogout" :disabled="isLogoutLoading"
           :class="isLogoutLoading ? 'animate-pulse bg-gray-600' : 'bg-rose-600'"
-          class="outline-none border-none px-4 py-2 rounded transition-all ease-in hover:bg-rose-700 font-medium active:scale-95 focus-visible:ring-2 focus-visible:ring-rose-600 ring-offset-2 ring-offset-slate-900">
+          class="outline-none border-none px-4 py-2 rounded transition-all ease-in hover:bg-rose-700 font-bold text-lg active:scale-95 focus-visible:ring-2 focus-visible:ring-rose-600 ring-offset-2 ring-offset-slate-900">
           {{ isLogoutLoading ? 'Logging out...' : 'Logout' }}
         </button>
       </div>
@@ -161,6 +166,10 @@ async function handleLogout() {
   queryClient.invalidateQueries({ queryKey: ['currentUser'] })
 
 }
+
+onKeyStroke("Escape", (e) => {
+  isSidebar.value = false
+})
 </script>
 
 <style>
@@ -175,7 +184,18 @@ body {
 
 .sidebar-enter-from,
 .sidebar-leave-to {
-  transform: translateX(-100%);
-  transition: all 150ms ease-in 0s
+  transform: translateX(100%);
+  transition: all 300ms ease-in 0s
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 1;
+  transition: all 300ms ease-in 0s
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative scroll-smooth">
     <Transition>
       <Comments :post-id="(route.params.postId as string)" v-if="showComments" @close="() => showComments = false" />
     </Transition>
@@ -71,8 +71,19 @@
         comments
       </button>
     </div>
-    <pre v-html="data?.content" v-if="!isLoading" class="pt-5 text-lg whitespace-pre-line font-sans"></pre>
+    <p class="pt-5 text-lg font-sans leading-8 tracking-wide">{{ data?.content }}</p>
   </div>
+  <Transition name="toTop" tag="div">
+    <div v-if="y > 0"
+      class="flex items-center text-xl gap-2 bg-slate-900 ring-2 ring-emerald-500 w-fit p-2 md:p-3 rounded-full cursor-pointer hover:text-emerald-400 select-none fixed bottom-2 right-0 z-20"
+      @click="scrollToTop">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256">
+        <path fill="currentColor"
+          d="m229.66 114.34l-96-96a8 8 0 0 0-11.32 0l-96 96A8 8 0 0 0 32 128h40v80a16 16 0 0 0 16 16h80a16 16 0 0 0 16-16v-80h40a8 8 0 0 0 5.66-13.66ZM176 112a8 8 0 0 0-8 8v88H88v-88a8 8 0 0 0-8-8H51.31L128 35.31L204.69 112Z" />
+      </svg>
+      <span class="hidden md:block">Back to top</span>
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -157,6 +168,12 @@ async function handleVote() {
 }
 
 const showComments = ref(false)
+
+const { y } = useWindowScroll()
+
+function scrollToTop() {
+  scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>
 
 <style scoped>
@@ -170,5 +187,16 @@ const showComments = ref(false)
   scale: 0.75;
   opacity: 0;
   rotate: x -90deg;
+}
+
+.toTop-enter-active,
+.toTop-leave-active {
+  transition: scale 0.2s ease;
+}
+
+.toTop-enter-from,
+.toTop-leave-to {
+  scale: 0;
+  transition: all 200ms ease-in 0s
 }
 </style>
